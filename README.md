@@ -21,3 +21,7 @@ CSCE 314 - Assignment 7
 **Travis Olbrich:** Threading, Graphics
 
 **Brooke Griffith:** Sorting Algorithms
+
+### Sources
+
+* Initial Code: <http://www.tutorialspoint.com/java/java_multithreading.htm>
