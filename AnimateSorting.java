@@ -17,39 +17,42 @@ public class AnimateSorting {
         new SortThread("bubble");
         new SortThread("quick");
         
-        System.out.println("Main thread exiting");
+        System.out.println("[DEBUG] Main thread exiting");
     }
-}
 
-/**
- * Each SortThread is the generic structure that handles each individual sorting 
- * algorithm. Each individual graphical window is created here and the sorting
- * algorithms are called from here.
- *
- * @author  Travis Olbrich
- *
- * @param   algorithm   the name of the algorithm we would like to run
- * @param   items       the vector of integer numbers to sort
- */
-class SortThread implements Runnable {
-    Thread t;
 
-    SortThread(String algorithm) {
-        t = new Thread(this, "Sorting Thread (" + algorithm + ")");
-        System.out.println("Child thread: " + t);
-        t.start(); 
-    }
-   
-    public void run() {
-        try {
-            for(int i = 5; i > 0; i--) {
-                System.out.println("Child Thread (" + t + "): " + i);
-            
-                Thread.sleep(500);
-            }
-        } catch (InterruptedException e) {
-            System.out.println("Thread interrupted.");
+    /**
+     * Each SortThread is the generic structure that handles each individual sorting 
+     * algorithm. Each individual graphical window is created here and the sorting
+     * algorithms are called from here.
+     *
+     * @author  Travis Olbrich
+     *
+     * @param   algorithm   the name of the algorithm we would like to run
+     * @param   items       the vector of integer numbers to sort
+     */
+    static class SortThread implements Runnable {
+        Thread t;
+
+        SortThread(String algorithm) {
+            t = new Thread(this, "Sorting Thread (" + algorithm + ")");
+            System.out.println("[DEBUG] Child thread: " + t);
+            t.start(); 
         }
-        System.out.println("Exiting child thread (" + t + ").");
+       
+        public void run() {
+            try {
+                for(int i = 5; i > 0; i--) {
+                    System.out.println("[DEBUG] Child Thread (" + t + "): " + i);
+                
+                    Thread.sleep(500);
+                }
+            } catch (InterruptedException e) {
+                System.out.println("[DEBUG] Thread interrupted.");
+            }
+            System.out.println("[DEBUG] Exiting child thread (" + t + ").");
+        }
     }
 }
+
+
