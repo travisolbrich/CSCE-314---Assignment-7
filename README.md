@@ -25,3 +25,4 @@ CSCE 314 - Assignment 7
 ### Sources
 
 * Initial Code: <http://www.tutorialspoint.com/java/java_multithreading.htm>
+* Java Tutorials: <http://docs.oracle.com/javase/tutorial>
