@@ -20,7 +20,7 @@ import java.util.Collections;
  */
 public class AnimateSorting extends JFrame{
     public static void main(String args[]) {
-        Vector toSort = new Vector();
+        Vector<Integer> toSort = new Vector();
         int max = 50;
 
         try{
@@ -38,8 +38,10 @@ public class AnimateSorting extends JFrame{
         //Randomize the locations of the data to sort
         Collections.shuffle(toSort);
 
-        SortThread bubble = new SortThread("bubble", toSort);
-        SortThread quick = new SortThread("quick", toSort);        
+        SortThread bubble = new SortThread("bubble", (Vector<Integer>)toSort.clone());    
+        SortThread insertion = new SortThread("insertion", (Vector<Integer>)toSort.clone());
+        SortThread quick = new SortThread("quick", (Vector<Integer>)toSort.clone());  
+        SortThread shell = new SortThread("shell", (Vector<Integer>)toSort.clone());      
     }
 
 
@@ -54,6 +56,7 @@ public class AnimateSorting extends JFrame{
         Thread t;
         String algorithm;
         Vector toSort;
+        int delay = 10;
 
         SortThread(String a, Vector s) {
             algorithm = a;
@@ -65,8 +68,9 @@ public class AnimateSorting extends JFrame{
        
         public void run() {
             try {
+                /*
                 JFrame frame = new JFrame(algorithm);
-                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
          
                 JPanel panel = new animate(toSort);
 
@@ -78,16 +82,195 @@ public class AnimateSorting extends JFrame{
                 frame.setVisible(true);
 
                 t.sleep(2000);
+                System.out.println("After Sleep" + t.toString());
 
+                while(true){
+                    t.sleep(60);
                 frame.remove(panel);
 
+                Collections.shuffle(toSort);
+
+                panel = new animate(toSort);
+                frame.add(panel);
+
+                frame.setFocusableWindowState(false);
+                frame.setVisible(true);
+                frame.setFocusableWindowState(true);
+                */
+
+                JFrame frame = new JFrame(algorithm);
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+                JPanel panel = new animate(toSort);
+                frame.add(panel);
+                frame.pack();
+                frame.setLocationByPlatform(true);
                 frame.setVisible(true);
 
+                t.sleep(5000);
+
+                if(algorithm.equals("insertion"))
+                    insertionSort(toSort, frame);
+
+                if(algorithm.equals("quick"))
+                    quickSort(toSort, frame);
+
+                else if(algorithm.equals("bubble"))
+                    bubbleSort(toSort, frame);
+
+                else if(algorithm.equals("shell"))
+                    shellSort(toSort, frame);
+
             } catch (Exception e) {
+
+            }
+        }       
+        
+        public Vector bubbleSort(Vector<Integer> v, JFrame frame){
+            Vector <Integer> bSort = v;
+            
+            try{
+                for(int i = 0; i < bSort.size(); ++i){
+                    for (int j = 1; j < bSort.size() - i; ++j){
+                        int elem = j-1;
+                        int nextelem = j;
+
+                        // Part that does the graphing
+                        t.sleep(delay);
+                        JPanel panel = new animate(bSort);
+                        frame.add(panel);
+                        frame.setFocusableWindowState(false);
+                        frame.setVisible(true);
+                        frame.setFocusableWindowState(true);
+                        //End of part that does the graphing
+
+                        if( bSort.get(elem) > bSort.get(nextelem)){
+                            int temp1 = bSort.get(elem);
+                            int temp2 = bSort.get(nextelem);
+                            bSort.set(elem, temp2);
+                            bSort.set(nextelem, temp1);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+
+            }
+
+            return bSort;
+        }
+
+        public Vector shellSort(Vector<Integer> v, JFrame frame){
+            Vector<Integer> sSort = v;
+
+            try{
+                int inc = sSort.size() / 2;
+                while (inc > 0){
+
+                    for ( int i = inc; i < sSort.size(); ++i){
+                        int j = i;
+                        int temp = sSort.get(i);
+                        while (j >= inc && sSort.get(j - inc) > temp){
+                    // Part that does the graphing
+                    t.sleep(delay);
+                    JPanel panel = new animate(sSort);
+                    frame.add(panel);
+                    frame.setFocusableWindowState(false);
+                    frame.setVisible(true);
+                    frame.setFocusableWindowState(true);
+                    //End of part that does the graphing
+                            sSort.set(j, sSort.get(j - inc));
+                            j = j - inc;
+                        }
+                        sSort.set(j, temp);
+                    }
+                    if(inc ==2) {
+                        inc = 1;
+                    } else {
+                        inc *= (5.0/11);
+                    }
+                }
+            } catch (Exception e) {
+
+            }
+            return sSort;
+        }
+
+        public void insertionSort(Vector<Integer> toSort, JFrame frame){        
+            try{
+                for (int i = 0; i < toSort.size(); i++){
+                    for (int j = i; j > 0; j--){
+                        
+                        // Part that does the graphing
+                        t.sleep(delay);
+                        JPanel panel = new animate(toSort);
+                        frame.add(panel);
+                        frame.setFocusableWindowState(false);
+                        frame.setVisible(true);
+                        frame.setFocusableWindowState(true);
+                        //End of part that does the graphing
+
+                        if((int)toSort.get(j-1)>(int)toSort.get(j)){
+                            int swap = (int)toSort.get(j);
+                            toSort.set(j, (int)toSort.get(j-1));
+                            toSort.set(j-1, swap);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+
             }
         }
+
+        public Vector quickSort(Vector<Integer> v, JFrame frame){
+            Vector<Integer> qSort = new Vector();
+            Vector<Integer> greaterThan = new Vector();
+            Vector<Integer> lessThan = new Vector();
+            try{
+                
+                int pivotIndex = (int) Math.round(v.size() / 2);
+                
+                for(int i = 0; i < v.size(); ++i){
+                    if(i==pivotIndex){
+                        i=pivotIndex;
+                    } else if(v.get(i)>=v.get(pivotIndex)){
+                        greaterThan.add(v.get(i));
+                    } else if (v.get(i)<v.get(pivotIndex)) {
+                        lessThan.add(v.get(i));
+                    }
+                }
+                
+
+                if(lessThan.size()!=0){
+                    qSort.addAll(quickSort(lessThan, frame));
+                }
+                
+                qSort.add(v.get(pivotIndex));
+                
+                if(greaterThan.size()!=0){
+                    qSort.addAll(quickSort(greaterThan, frame));
+                }
+                // Part that does the graphing
+                t.sleep(delay);
+                Vector<Integer> both = new Vector<Integer>();
+                both.addAll(lessThan);
+                both.addAll(greaterThan);
+                JPanel panel = new animate(qSort);
+                frame.add(panel);
+                frame.setFocusableWindowState(false);
+                frame.setVisible(true);
+                frame.setFocusableWindowState(true);
+                //End of part that does the graphing
+            
+            } catch (Exception e){
+
+            }
+            return qSort;
+        }
+
+
     }
 
+    
     
     static class animate extends JPanel{
         Vector toSort;
